@@ -46,5 +46,6 @@ class upg {
   anchor { 'wrapper::begin': }        ->
   class { 'upg::jdk_install': }       ->
   class { 'upg::fmw_infra_install': } ->
+  class { 'upg::fr_12c_install': }    ->
   anchor { 'wrapper::end': }
 }
