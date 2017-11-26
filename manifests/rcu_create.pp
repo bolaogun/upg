@@ -7,12 +7,20 @@ class upg::rcu_create {
     $ownr = hiera('forms_upg::owner','oracle')
     $grp  = hiera('forms_upg::group',  'oinstall')
   
-#    package { 'python-devel':
-#        ensure => present,
-#    }
-     
-
-
+    $db_host = hiera('forms_upg::db_host','db_host')
+    $db_port = hiera('forms_upg::db_port', 1521)
+    $db_sid = hiera('forms_upg::db_sid', 'TIA')
+    $db_usr = hiera('forms_upg::db_sysdba_usr', 'sys')
+    $db_pwd = hiera('forms_upg::db_sysdba_pwd', 'welcome123')
+ 
+    $ddl_stmt = "CREATE TABLESPACE abcqwer datafile '/u01/app/oradata' size 10m autoextend on maxsize unlimited" 
+    upg::exec_ora_ddl { "${ddl_stmt}": 
+        host => "${db_host}",
+        port => "${db_port}",
+        sid => "${db_port}",
+        usrnm => "${db_usr}",
+        pwd => "${db_pwd}",
+    }
 #   exec { "${extract_to}/fmw_12.2.1.3.0_fr_linux64.bin -silent -responseFile /tmp/FR_Aft_FMWInfra.rsp -invPtrLoc /tmp/oraInst.loc":
 #       path => "${java_home}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
 #       user => "${ownr}",
