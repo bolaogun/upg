@@ -6,12 +6,16 @@ class upg::rcu_create {
     $java_home = hiera('forms_upg::java_home', "${oracle_base}/java")
     $ownr = hiera('forms_upg::owner','oracle')
     $grp  = hiera('forms_upg::group',  'oinstall')
-  
+    $env = hiera('forms_upg::env', 'deve') 
     $db_host = hiera('forms_upg::db_host','db_host')
     $db_port = hiera('forms_upg::db_port', 1521)
     $db_sid = hiera('forms_upg::db_sid', 'TIA')
     $db_usr = hiera('forms_upg::db_sysdba_usr', 'sys')
     $db_pwd = hiera('forms_upg::db_sysdba_pwd', 'welcome123')
+    $db_file_dest = hiera('forms_upg::db_file_dest', "/u01/oradata/${env}")
+
+    # Use variables above to generate a python script from a template, put it in a specific location
+    # and the execute it on the agent
  
     $ddl_stmt = "CREATE TABLESPACE abcqwer datafile '/u01/app/oradata' size 10m autoextend on maxsize unlimited" 
     upg::exec_ora_ddl { "${ddl_stmt}": 

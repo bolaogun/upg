@@ -5,9 +5,9 @@ define upg::exec_ora_ddl (
     $usrnm,
     $pwd) {
 
-    ensure_packages(['epel-release','python-devel', 'python-setuptools', 'python-pip' ], {
-        ensure   => present,
-    })
+#    ensure_packages(['epel-release','python-devel', 'python-setuptools', 'python-pip' ], {
+#        ensure   => present,
+#    })
 
 
 #    ensure_packages(['cx_Oracle',], {
