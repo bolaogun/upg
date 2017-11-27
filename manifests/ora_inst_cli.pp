@@ -6,6 +6,6 @@ class upg::ora_inst_cli {
       ensure => 'installed',
       provider => 'rpm',
       source => "${repo}/${filename}",
-      creates => '/usr/lib/oracle/12.2/client64/lib',
+      #creates => '/usr/lib/oracle/12.2/client64/lib',
     }  
 }
