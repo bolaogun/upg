@@ -1,100 +1,55 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
-import cx_Oracle
 import sys
+import cx_Oracle
 import argparse
 
+def printException (exception):
+  error, = exception.args
+  print ("Error code = {}\n".format(error.code))
+  print ("Error message = {}\n".format(error.message))
 
-class OraDb():
-  def __init__(self, **kwargs):
-    self.hostname = hostname
-    self. port = port
-    self.db = db
-    self.user = user
-    self.password = password
-    self.connector = None
-    self.cursor = None
+#username = 'scott'
+#password = 'tiger'
+#databaseName = "TARGET"
 
-  def initConnection(self):
-    self.connector = None
-     
-  def initCursor(self):
-    self.cursor = self.connector.cursor
+parser = argparse.ArgumentParser()
 
-  def printConnected(self):
-    printf("Connected\n")
-    
-  def getConnector(self):
-    self.initConnection()
-    self.__dsn = cx_Oracle.makedsn(self.hostname, self.port, self.db)
-    self.__dsn = utf8encode(self.__dsn)
-    self.user = utf8encode(self.user)
-    self.password = utf8encode(self.password)
+parser.add_argument("-hst", "--hostname", type=str, required=True, help="The Oracle Db Host")
+parser.add_argument("-pn", "--portnum", type=str, required=True, help="The Db Listener Port Number")
+parser.add_argument("-s", "--sid", type=str, required=True, help="The Oracle Db SID to connect to")
+parser.add_argument("-u", "--username", type=str, required=True, help="The Username to connect as")
+parser.add_argument("-pw", "--password", type=str, required=True, help="The Password for the User")
+parser.add_argument("-sql", "--sql_statement", type=str, required=True, help="The SQL Statement to Execute")
+args = parser.parse_args()
+print (args)
 
+dsn = cx_Oracle.makedsn(args.hostname, args.portnum, args.sid )
+try:
+    connection = cx_Oracle.connect (dsn=dsn, user=args.username, password=args.password, mode=cx_Oracle.SYSDBA)
+except cx_Oracle.DatabaseError, exception:
     try:
-        self.connector = cx_Oracle.connect(dsn=self.__dsn, user=self.user, password=self.password, mode=cx_Oracle.SYSDBA)
-        printf("successfully connected as SYSDBA")
-    except (cx_Oracle.OperationalError, cx_Oracle.DatabaseError, cx_Oracle.InterfaceError):
-        try:
-            self.connector = cx_Oracle.connect(dsn=self.__dsn, user=self.user, password=self.password)
-        #except (cx_Oracle.OperationalError, cx_Oracle.DatabaseError, cx_Oracle.InterfaceError), msg:
-        except (cx_Oracle.OperationalError, cx_Oracle.DatabaseError, cx_Oracle.InterfaceError):
-            self.printException (exception)
-            #raise SqlmapConnectionException(msg)
+        connection = cx_Oracle.connect (dsn=dsn, user=args.username, password=args.password)
+    except cx_Oracle.DatabaseError, exception:
+        print ('Failed to connect to DB: {}\n',format(dsn))
+        printException (exception)
+        exit (1)
 
-    self.initCursor()
-    self.printConnected()
-    return self.connector
+cursor = connection.cursor ()
 
-  def getCursor(self):
-    return self.cursor
+try:
+  cursor.execute (args.sql_statement)
+except cx_Oracle.DatabaseError, exception:
+  print ('Failed to Execute Statement: {}\n'.format(args.sql_statement))
+  printException (exception)
+  exit (1)
 
-  def printException (exception):
-    error, = exception.args
-    printf ("Error code = %s\n",error.code);
-    printf ("Error message = %s\n",error.message);
-  
-  def execsql(self, sql_stmt):
-    try:
-      self.cursor.execute(sql_stmt)
-    #except cx_Oracle.DatabaseError, exception:
-    except cx_Oracle.DatabaseError:
-      printf ('Failed to Execute Statement\n')
-      self.printException (exception)
-      exit (1)
+#count = cursor.fetchone ()[0]
+print ('Statement Executed')
 
-  def close(self):
-    self.cursor.close()
+cursor.close ()
 
-def main():
+connection.close ()
 
-  parser = argparse.ArgumentParser()
-#  parser.add_argument("-hst", "--hostname", type=str, metavar='', required=True, help="The Oracle Db Host")
-#  parser.add_argument("-pn", "--portnum", type=str, metavar='', required=True, help="The Db Listener Port Number")
-#  parser.add_argument("-s", "--sid", type=str, metavar='', required=True, help="The Oracle Db SID to connect to")
-#  parser.add_argument("-u", "--username", type=str, metavar='', required=True, help="The Username to connect as")
-#  parser.add_argument("-pw", "--password", type=str, metavar='', required=True, help="The Password for the User")
-#  parser.add_argument("-sql", "--sql_statement", type=str, metavar='', required=True, help="The SQL Statement to Execute")
+exit (0)
 
-  parser.add_argument("-hst", "--hostname", type=str, required=True, help="The Oracle Db Host")
-  parser.add_argument("-pn", "--portnum", type=str, required=True, help="The Db Listener Port Number")
-  parser.add_argument("-s", "--sid", type=str, required=True, help="The Oracle Db SID to connect to")
-  parser.add_argument("-u", "--username", type=str, required=True, help="The Username to connect as")
-  parser.add_argument("-pw", "--password", type=str, required=True, help="The Password for the User")
-  parser.add_argument("-sql", "--sql_statement", type=str, required=True, help="The SQL Statement to Execute")
-  args = parser.parse_args()
-  
-#  db = OraDb(hostname = hstnm, port = prt, db = sid, user = usr,
-#                password = pwd)
-#
-#  db.getConnector()
-#  db.getCursor()
-#  db.execsql(sql_stmt)
-#  db.close()
-
-#cursor = connection.cursor()
-#cursor.execute("CREATE TABLE x(a DATE)")
-#cursor.close()
-
-if __name__ == '__main__':
-  main()
