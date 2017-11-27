@@ -16,17 +16,17 @@ class upg::fr_12c_install {
 #        ensure => present,
 #    }
      
-    exec { "unzip -o ${repo}/${filename01}":
+    exec { "unzip ${repo}/${filename01}":
         path => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
         cwd => "${extract_to}",
-        command => "unzip ${repo}/${filename01}",
+        command => "unzip -o ${repo}/${filename01}",
         creates         => "${extract_to}/fmw_12.2.1.3.0_fr_linux64.bin",
     }
 
-    exec { "unzip -o ${repo}/${filename02}":
+    exec { "unzip ${repo}/${filename02}":
         path => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
         cwd => "${extract_to}",
-        command => "unzip ${repo}/${filename02}",
+        command => "unzip -o ${repo}/${filename02}",
         creates         => "${extract_to}/fmw_12.2.1.3.0_fr_linux64-2.zip",
     }
 

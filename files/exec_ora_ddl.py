@@ -9,10 +9,6 @@ def printException (exception):
   print ("Error code = {}\n".format(error.code))
   print ("Error message = {}\n".format(error.message))
 
-#username = 'scott'
-#password = 'tiger'
-#databaseName = "TARGET"
-
 parser = argparse.ArgumentParser()
 
 parser.add_argument("-hst", "--hostname", type=str, required=True, help="The Oracle Db Host")
@@ -44,7 +40,6 @@ except cx_Oracle.DatabaseError, exception:
   printException (exception)
   exit (1)
 
-#count = cursor.fetchone ()[0]
 print ('Statement Executed')
 
 cursor.close ()
