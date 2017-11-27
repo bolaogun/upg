@@ -43,11 +43,11 @@
 # Copyright 2017 Your name here, unless otherwise noted.
 #
 class upg {
-  anchor { 'wrapper::begin': }        ->
-  class { 'upg::jdk_install': }       ->
-  class { 'upg::ora_inst_cli': }       ->
-  #class { 'upg::fmw_infra_install': } ->
-  #class { 'upg::fr_12c_install': }    ->
-  class { 'upg::rcu_create': }    ->
+  anchor { 'wrapper::begin': }  ->
+  class { 'upg::jdk_install': } ->
+  class { 'upg::ora_inst_cli': }  
+  class { 'upg::fmw_infra_install': } ->
+  class { 'upg::fr_12c_install': }    ->
+  #class { 'upg::rcu_create': }    ->
   anchor { 'wrapper::end': }
 }

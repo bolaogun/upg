@@ -14,6 +14,7 @@ class upg::fmw_infra_install {
   
     package { 'unzip':
         ensure => present,
+        provider => yum,
     }
      
     exec {"mkdir -p ${oracle_base}/config":
@@ -32,14 +33,21 @@ class upg::fmw_infra_install {
         group  => "${grp}",
         mode   => '0755',
     }
-
-    archive { "${repo}/${filename}":
-        ensure          => present,
-        extract         => true,
-        extract_path    => "${extract_to}",
+  
+    exec { "unzip -o ${repo}/${filename}":
+        path => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+        cwd => "${extract_to}",
+        command => "unzip ${repo}/${filename}",
         creates         => "${extract_to}/fmw_12.2.1.3.0_infrastructure.jar",
-        cleanup         => true,
     }
+
+#    archive { "${repo}/${filename}":
+#        ensure          => present,
+#        extract         => true,
+#        extract_path    => "${extract_to}",
+#        creates         => "${extract_to}/fmw_12.2.1.3.0_infrastructure.jar",
+#        cleanup         => true,
+#    }
  
    file { '/tmp/fmw_infr.rsp':
        content => template('upg/fmw_infr.rsp.erb'),

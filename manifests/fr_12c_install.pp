@@ -16,22 +16,35 @@ class upg::fr_12c_install {
 #        ensure => present,
 #    }
      
-
-    archive { "${repo}/${filename01}":
-        ensure          => present,
-        extract         => true,
-        extract_path    => "${extract_to}",
+    exec { "unzip -o ${repo}/${filename01}":
+        path => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+        cwd => "${extract_to}",
+        command => "unzip ${repo}/${filename01}",
         creates         => "${extract_to}/fmw_12.2.1.3.0_fr_linux64.bin",
-        cleanup         => true,
     }
- 
-    archive { "${repo}/${filename02}":
-        ensure          => present,
-        extract         => true,
-        extract_path    => "${extract_to}",
+
+    exec { "unzip -o ${repo}/${filename02}":
+        path => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+        cwd => "${extract_to}",
+        command => "unzip ${repo}/${filename02}",
         creates         => "${extract_to}/fmw_12.2.1.3.0_fr_linux64-2.zip",
-        cleanup         => true,
     }
+
+#    archive { "${repo}/${filename01}":
+#        ensure          => present,
+#        extract         => true,
+#        extract_path    => "${extract_to}",
+#        creates         => "${extract_to}/fmw_12.2.1.3.0_fr_linux64.bin",
+#        cleanup         => true,
+#    }
+# 
+#    archive { "${repo}/${filename02}":
+#        ensure          => present,
+#        extract         => true,
+#        extract_path    => "${extract_to}",
+#        creates         => "${extract_to}/fmw_12.2.1.3.0_fr_linux64-2.zip",
+#        cleanup         => true,
+#    }
  
    file { '/tmp/FR_Aft_FMWInfra.rsp':
        content => template('upg/FR_Aft_FMWInfra.rsp.erb'),
