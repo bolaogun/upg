@@ -1,0 +1,21 @@
+#!/bin/bash
+export MW_HOME="<%= @mw_home %>"
+export WLS_HOME="<%= @mw_home %>/wlserver"
+export WL_HOME="$WLS_HOME"
+export JAVA_HOME="<%= @java_home %>"
+export PATH="$JAVA_HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"
+
+<%= @mw_home %>/oracle_common/bin/rcu -silent -createRepository -connectString '<%= @db_host %>:<%= @db_port %>:<%= @db_sid %>' \
+-dbUser <%= @db_usr %> \
+-dbRole sysdba \
+-databaseType ORACLE \
+-useSamePasswordForAllSchemaUsers true \
+-component STB        -tablespace <%= @env %>_STB       -tempTablespace <%= @env %>_IAS_TEMP \
+-component OPSS       -tablespace <%= @env %>_IAS_OPSS  -tempTablespace <%= @env %>_IAS_TEMP \
+-component IAU        -tablespace <%= @env %>_IAU       -tempTablespace <%= @env %>_IAS_TEMP \
+-component IAU_APPEND -tablespace <%= @env %>_IAU       -tempTablespace <%= @env %>_IAS_TEMP \
+-component IAU_VIEWER -tablespace <%= @env %>_IAU       -tempTablespace <%= @env %>_IAS_TEMP \
+-component WLS        -tablespace <%= @env %>_WLS       -tempTablespace <%= @env %>_IAS_TEMP \
+-component MDS        -tablespace <%= @env %>_MDS       -tempTablespace <%= @env %>_IAS_TEMP \
+-schemaPrefix <%= @env %> \
+-f < <%= @rcu_pwd_rsp %>

@@ -19,6 +19,12 @@ class upg::jdk_install {
         creates => "${oracle_base}",
     }
 
+    file { "${oracle_base}" :
+        ensure => directory,
+        owner => "${ownr}",
+        group => "${grp}"
+    }
+
     exec {"untar ${repo}/${filename}":
         path => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
         command => "tar xvzf ${repo}/${filename}", 

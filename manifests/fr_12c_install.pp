@@ -19,6 +19,8 @@ class upg::fr_12c_install {
     exec { "unzip ${repo}/${filename01}":
         path => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
         cwd => "${extract_to}",
+        user => "${ownr}",
+        group  => "${grp}",
         command => "unzip -o ${repo}/${filename01}",
         creates         => "${extract_to}/fmw_12.2.1.3.0_fr_linux64.bin",
     }
@@ -26,6 +28,8 @@ class upg::fr_12c_install {
     exec { "unzip ${repo}/${filename02}":
         path => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
         cwd => "${extract_to}",
+        user => "${ownr}",
+        group  => "${grp}",
         command => "unzip -o ${repo}/${filename02}",
         creates         => "${extract_to}/fmw_12.2.1.3.0_fr_linux64-2.zip",
     }
@@ -48,6 +52,8 @@ class upg::fr_12c_install {
  
    file { '/tmp/FR_Aft_FMWInfra.rsp':
        content => template('upg/FR_Aft_FMWInfra.rsp.erb'),
+       owner => "${ownr}",
+       group  => "${grp}",
    }
 
 #   file { '/tmp/oraInst.loc':

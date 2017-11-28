@@ -20,11 +20,15 @@ class upg::fmw_infra_install {
     exec {"mkdir -p ${oracle_base}/config":
         path => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
         creates => "${oracle_base}/config",
+        user  => "${ownr}",
+        group  => "${grp}",
     }
 
     exec {"mkdir -p ${inv_lctn}":
         path => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
         creates => "${inv_lctn}",
+        user  => "${ownr}",
+        group  => "${grp}",
     }
 
     file { [ "${mw_home}", "${oracle_base}/config", "${oracle_base}/config/domains", "${oracle_base}/config/applications", "${inv_lctn}" ]: 
@@ -39,6 +43,9 @@ class upg::fmw_infra_install {
         cwd => "${extract_to}",
         command => "unzip ${repo}/${filename}",
         creates         => "${extract_to}/fmw_12.2.1.3.0_infrastructure.jar",
+        umask => "000",
+        #user  => "${ownr}",
+        group  => "${grp}",
     }
 
 #    archive { "${repo}/${filename}":
@@ -51,10 +58,14 @@ class upg::fmw_infra_install {
  
    file { '/tmp/fmw_infr.rsp':
        content => template('upg/fmw_infr.rsp.erb'),
+       owner  => "${ownr}",
+       group  => "${grp}",
    }
 
    file { '/tmp/oraInst.loc':
        content => template('upg/oraInst.loc.erb'),
+       owner  => "${ownr}",
+       group  => "${grp}",
    }
 
    exec { "${java_home}/bin/java -Xmx1024m -jar ${extract_to}/fmw_12.2.1.3.0_infrastructure.jar -silent -responseFile /tmp/fmw_infr.rsp -invPtrLoc /tmp/oraInst.loc":
